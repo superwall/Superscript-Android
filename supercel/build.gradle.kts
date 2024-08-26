@@ -54,15 +54,14 @@ dependencies {
 
 afterEvaluate {
 
-publishing {
-    publications {
-        create<MavenPublication>("release") {
-            from(components["release"])
-            groupId = "com.superwall.supercel"
-            artifactId = "supercel"
-            version = "1.0.1" // Set your library version
-
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.superwall.supercel"
+                artifactId = "supercel"
+                version = "0.1.3" // Set your library version
+            }
         }
     }
-}
 }
