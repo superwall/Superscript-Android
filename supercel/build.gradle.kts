@@ -66,7 +66,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.superwall.supercel"
                 artifactId = "supercel"
-                version = "0.1.3" // Set your library version
+                version = project.version.toString() // Set your library version
 
                 pom {
                     name.set("SuperCEL")
