@@ -82,6 +82,9 @@ jobs:
           source $HOME/.cargo/env
         shell: bash
 
+      - name: Install cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
       - name: Build Android Framework
         run: |
           chmod +x ./build_android.sh
