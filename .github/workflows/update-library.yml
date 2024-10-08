@@ -117,7 +117,7 @@ jobs:
         run: |
           git tag -a "${{ env.VERSION_NUMBER }}" -m "Release version ${{ env.VERSION_NUMBER }}"
           git push origin "${{ env.VERSION_NUMBER }}"
-        working-directory: ios
+        working-directory: android
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
