@@ -99,10 +99,10 @@ jobs:
       - name: Replace Kotlin File
         run: |
           rm -rf android/supercel/src/main/java/com/superwall/supercel/Cel.kt
-          mv rust/target/android/java/uniffi/cel.kt android/supercel/src/main/java/com/superwall/supercel/CEL.kt
+          mv rust/target/android/java/uniffi/cel/com/superwall/supercel/cel.kt android/supercel/src/main/java/com/superwall/supercel/CEL.kt
 
       - name: Update Version
-        run: sed -i 's/version = "[0-9.]*"/version = "${{ env.VERSION_NUMBER }}"/' build.gradle.kts
+        run: sed -i 's/version = "[0-9.]*"/version = "${{ env.VERSION_NUMBER }}"/' android/supercel/build.gradle.kts
 
       - name: Commit and Push Changes
         run: |
