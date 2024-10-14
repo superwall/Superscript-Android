@@ -14,7 +14,7 @@ plugins {
     id("signing")
 }
 
-version = "0.1.6"
+version = "0.1.7"
 android {
     namespace = "com.superwall.supercel"
     compileSdk = 34
