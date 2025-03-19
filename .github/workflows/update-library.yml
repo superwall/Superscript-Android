@@ -3,6 +3,8 @@ name: Update Framework
 on:
   repository_dispatch:
     types: [update-build]
+  workflow_dispatch:
+
 
 jobs:
   update_framework:
