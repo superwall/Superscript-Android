@@ -656,10 +656,10 @@ internal interface UniffiForeignFutureCompleteVoid : com.sun.jna.Callback {
     fun callback(`callbackData`: Long,`result`: UniffiForeignFutureStructVoid.UniffiByValue,)
 }
 internal interface UniffiCallbackInterfaceHostContextMethod0 : com.sun.jna.Callback {
-    fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,)
+    fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,)
 }
 internal interface UniffiCallbackInterfaceHostContextMethod1 : com.sun.jna.Callback {
-    fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,)
+    fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,)
 }
 internal interface UniffiCallbackInterfaceResultCallbackMethod0 : com.sun.jna.Callback {
     fun callback(`uniffiHandle`: Long,`result`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,)
@@ -862,9 +862,9 @@ fun uniffi_cel_eval_fn_free_hostcontext(`ptr`: Pointer,uniffi_out_err: UniffiRus
 fun uniffi_cel_eval_fn_init_callback_vtable_hostcontext(`vtable`: UniffiVTableCallbackInterfaceHostContext,
 ): Unit
 fun uniffi_cel_eval_fn_method_hostcontext_computed_property(`ptr`: Pointer,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
+): Unit
 fun uniffi_cel_eval_fn_method_hostcontext_device_property(`ptr`: Pointer,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
-): RustBuffer.ByValue
+): Unit
 fun uniffi_cel_eval_fn_clone_resultcallback(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
 ): Pointer
 fun uniffi_cel_eval_fn_free_resultcallback(`ptr`: Pointer,uniffi_out_err: UniffiRustCallStatus, 
@@ -1017,10 +1017,10 @@ private fun uniffiCheckApiChecksums(lib: IntegrityCheckingUniffiLib) {
     if (lib.uniffi_cel_eval_checksum_func_parse_to_ast() != 40465.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_cel_eval_checksum_method_hostcontext_computed_property() != 48485.toShort()) {
+    if (lib.uniffi_cel_eval_checksum_method_hostcontext_computed_property() != 5366.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_cel_eval_checksum_method_hostcontext_device_property() != 53978.toShort()) {
+    if (lib.uniffi_cel_eval_checksum_method_hostcontext_device_property() != 7074.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
     if (lib.uniffi_cel_eval_checksum_method_resultcallback_on_result() != 27954.toShort()) {
@@ -1356,9 +1356,9 @@ public object FfiConverterString: FfiConverter<String, RustBuffer.ByValue> {
 
 public interface HostContext {
     
-    fun `computedProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback): kotlin.String
+    fun `computedProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback)
     
-    fun `deviceProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback): kotlin.String
+    fun `deviceProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback)
     
     companion object
 }
@@ -1445,28 +1445,26 @@ open class HostContextImpl: Disposable, AutoCloseable, HostContext
         }
     }
 
-    override fun `computedProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback): kotlin.String {
-            return FfiConverterString.lift(
+    override fun `computedProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback)
+        = 
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_cel_eval_fn_method_hostcontext_computed_property(
         it, FfiConverterString.lower(`name`),FfiConverterString.lower(`args`),FfiConverterTypeResultCallback.lower(`callback`),_status)
 }
     }
-    )
-    }
+    
     
 
-    override fun `deviceProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback): kotlin.String {
-            return FfiConverterString.lift(
+    override fun `deviceProperty`(`name`: kotlin.String, `args`: kotlin.String, `callback`: ResultCallback)
+        = 
     callWithPointer {
     uniffiRustCall() { _status ->
     UniffiLib.INSTANCE.uniffi_cel_eval_fn_method_hostcontext_device_property(
         it, FfiConverterString.lower(`name`),FfiConverterString.lower(`args`),FfiConverterTypeResultCallback.lower(`callback`),_status)
 }
     }
-    )
-    }
+    
     
 
     
@@ -1481,7 +1479,7 @@ open class HostContextImpl: Disposable, AutoCloseable, HostContext
 // Put the implementation in an object so we don't pollute the top-level namespace
 internal object uniffiCallbackInterfaceHostContext {
     internal object `computedProperty`: UniffiCallbackInterfaceHostContextMethod0 {
-        override fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,) {
+        override fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeHostContext.handleMap.get(uniffiHandle)
             val makeCall = { ->
                 uniffiObj.`computedProperty`(
@@ -1490,12 +1488,12 @@ internal object uniffiCallbackInterfaceHostContext {
                     FfiConverterTypeResultCallback.lift(`callback`),
                 )
             }
-            val writeReturn = { value: kotlin.String -> uniffiOutReturn.setValue(FfiConverterString.lower(value)) }
+            val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
     internal object `deviceProperty`: UniffiCallbackInterfaceHostContextMethod1 {
-        override fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,) {
+        override fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`args`: RustBuffer.ByValue,`callback`: Pointer,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeHostContext.handleMap.get(uniffiHandle)
             val makeCall = { ->
                 uniffiObj.`deviceProperty`(
@@ -1504,7 +1502,7 @@ internal object uniffiCallbackInterfaceHostContext {
                     FfiConverterTypeResultCallback.lift(`callback`),
                 )
             }
-            val writeReturn = { value: kotlin.String -> uniffiOutReturn.setValue(FfiConverterString.lower(value)) }
+            val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
