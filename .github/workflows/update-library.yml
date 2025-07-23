@@ -119,6 +119,16 @@ jobs:
           git commit -m "Update library"
           git push origin main
 
+      - name: Build and publish
+        env:
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PW}}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SECRING }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PW }}
+        run: ./gradlew publish
+        working-directory: android
+
       - name: Tag the New Version
         run: |
           git tag -a "${{ env.VERSION_NUMBER }}" -m "Release version ${{ env.VERSION_NUMBER }}"
@@ -135,13 +145,3 @@ jobs:
           body: "This is an automatically generated release. Please see the [original Rust release](https://github.com/superwall/superscript/releases/tag/${{ env.VERSION_NUMBER }}) for any version changes."
           draft: false
           prerelease: false
-
-      - name: Build and publish
-        env:
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PW}}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SECRING }}
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PW }}
-        run: ./gradlew publish
-        working-directory: android

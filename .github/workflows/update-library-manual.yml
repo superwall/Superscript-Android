@@ -94,23 +94,6 @@ jobs:
         run: |
           sed -i '/RequiresApi/d' ./android/supercel/src/main/java/com/superwall/supercel/CEL.kt
 
-      - name: Tag the New Version
-        run: |
-          git tag -a "${{ env.VERSION_NUMBER }}" -m "Release version ${{ env.VERSION_NUMBER }}"
-          git push origin "${{ env.VERSION_NUMBER }}"
-        working-directory: android
-
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.VERSION_NUMBER }}
-          release_name: ${{ env.VERSION_NUMBER }}
-          body: "This is an automatically generated release. Please see the [original Rust release](https://github.com/superwall/superscript/releases/tag/${{ env.VERSION_NUMBER }}) for any version changes."
-          draft: false
-          prerelease: false
-
       - name: Build and publish
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
