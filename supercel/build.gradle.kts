@@ -1,17 +1,11 @@
 import groovy.json.JsonBuilder
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 
-buildscript {
-    extra["awsAccessKeyId"] = System.getenv("AWS_ACCESS_KEY_ID") ?: findProperty("aws_access_key_id")
-    extra["awsSecretAccessKey"] = System.getenv("AWS_SECRET_ACCESS_KEY") ?: findProperty("aws_secret_access_key")
-    extra["sonatypeUsername"] = System.getenv("SONATYPE_USERNAME") ?: findProperty("sonatype_username")
-    extra["sonatypePassword"] = System.getenv("SONATYPE_PASSWORD") ?: findProperty("sonatype_password")
-}
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("maven-publish")
-    id("signing")
+    alias(libs.plugins.vanniktech.maven.publish)
 }
 
 version = "1.0.0"
@@ -20,7 +14,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 22
+        minSdk = 21
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -48,11 +42,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 }
 
 dependencies {
@@ -60,68 +49,41 @@ dependencies {
     implementation(libs.coroutines)
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-                groupId = "com.superwall.supercel"
-                artifactId = "supercel"
-                version = project.version.toString() // Set your library version
+mavenPublishing {
+    coordinates("com.superwall.supercel", "supercel", project.version.toString())
 
-                pom {
-                    name.set("SuperCEL")
-                    description.set("Superwall CEL Evaluator")
-                    url.set("https://superwall.com")
-
-                    licenses {
-                        license {
-                            name.set("MIT License")
-                            url.set("https://github.com/superwall/Superwall-Android?tab=MIT-1-ov-file#")
-                        }
-                    }
-                    developers {
-                        developer {
-                            id.set("ianrumac")
-                            name.set("Ian Rumac")
-                            email.set("ian@superwall.com")
-                        }
-                    }
-                    scm {
-                        connection.set("scm:git:git@github.com:superwall/SuperCEL-Android.git")
-                        developerConnection.set("scm:git:ssh://github.com:superwall/SuperCEL-Android.git")
-                        url.set("scm:git:https://github.com/superwall/SuperCEL-Android.git")
-                    }
-                }
+    pom {
+        name.set("SuperCEL")
+        description.set("Superwall CEL Evaluator")
+        inceptionYear.set("2024")
+        url.set("https://superwall.com")
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://github.com/superwall/Superwall-Android?tab=MIT-1-ov-file#")
+                distribution.set("https://github.com/superwall/Superwall-Android?tab=MIT-1-ov-file#")
             }
         }
-
-        repositories {
-            mavenLocal()
-
-            val sonatypeUsername: String? by extra
-            val sonatypePassword: String? by extra
-
-            if (sonatypeUsername != null && sonatypePassword != null) {
-                maven {
-                    url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                    credentials(PasswordCredentials::class.java) {
-                        username = sonatypeUsername
-                        password = sonatypePassword
-                    }
-                }
+        developers {
+            developer {
+                id.set("ianrumac")
+                name.set("Ian Rumac")
+                email.set("ian@superwall.com")
+                url.set("https://superwall.com")
             }
+        }
+        scm {
+            url.set("https://github.com/superwall/SuperCEL-Android")
+            connection.set("scm:git:git://github.com/superwall/SuperCEL-Android.git")
+            developerConnection.set("scm:git:ssh://git@github.com/superwall/SuperCEL-Android.git")
         }
     }
 
-
-    signing {
-        val signingKeyId: String? = System.getenv("SIGNING_KEY_ID")
-        val signingPassword: String? = System.getenv("SIGNING_PASSWORD")
-        val signingSecretKeyRingFile: String? = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
-        useInMemoryPgpKeys(signingKeyId, signingSecretKeyRingFile, signingPassword )
-        sign(publishing.publications["release"])
-    }
+    configure(AndroidSingleVariantLibrary())
+    
+    publishToMavenCentral()
+    
+    signAllPublications()
 }
 
 tasks.register("generateBuildInfo") {
