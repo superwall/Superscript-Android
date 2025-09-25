@@ -93,6 +93,12 @@ jobs:
           ./build_android.sh
         working-directory: rust
 
+      - name: Verify 16KB Page Alignment
+        run: |
+          chmod +x ./check_elf_alignment.sh
+          ./check_elf_alignment.sh target/android/jniLibs/
+        working-directory: rust
+
       - name: Replace binaries
         run: |
           rm -rf android/supercel/src/main/jniLibs/
