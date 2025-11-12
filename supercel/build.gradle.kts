@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.vanniktech.maven.publish)
 }
 
-version = "1.0.4"
+version = "1.0.5"
 android {
     namespace = "com.superwall.supercel"
     compileSdk = 34
