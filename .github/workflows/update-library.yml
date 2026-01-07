@@ -87,6 +87,14 @@ jobs:
       - name: Install cross
         run: cargo install cross --git https://github.com/cross-rs/cross
 
+      - name: Free Disk Space for Docker
+        uses: endersonmenezes/free-disk-space@v3
+        with:
+          remove_android: false
+          remove_dotnet: true
+          remove_haskell: true
+          rm_cmd: "rmz"  # Faster cleanup
+
       - name: Build Android Framework
         run: |
           chmod +x ./build_android.sh
